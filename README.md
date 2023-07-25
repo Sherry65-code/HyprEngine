@@ -2,9 +2,6 @@
 
 A library to implement OpenGL that works as a engine.
 
-Sure, here's the same set of instructions written in Markdown format:
-
-```markdown
 # Project Dependencies - Installation Instructions
 
 This project requires the following libraries to be installed on your system: GLEW, OpenGL, and freeglut. Below are the instructions for installing these libraries on different operating systems.
@@ -74,7 +71,14 @@ After installing the required libraries, you can verify the installation by chec
 ## Compiling the Project
 
 Once the dependencies are installed successfully, you can compile your project using the following command:
+
+Windows: 
 ```bash
-make
+make build-windows
+```
+
+Linux or MacOS:
+```bash
+make build-linux
 ```
 
