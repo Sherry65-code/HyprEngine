@@ -1,6 +1,3 @@
+build: main.c hypr.h
+	$(CC) -o main main.c -lGL -lGLU -lm -lglut
 
-build-linux: main.c window.h
-	$(CC) -o main main.c -lglfw -lGLEW -lGL -lm
-
-build-windows: main.c window.h
-	$(CC) -o main main.c -lglfw -lGLEW -lGL -lm
