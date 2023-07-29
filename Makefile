@@ -1,3 +1,2 @@
-build: main.c hypr.h
-	$(CC) -o main main.c -lGL -lGLU -lm -lglut
-
+linux: main.c hypr.h
+	gcc -o main main.c -lm -lGL

@@ -1,86 +1,50 @@
-#include <GL/glut.h>
+#include "DEPS/glut.c"
+#include "DEPS/gl_glfw.c"
 
-GLfloat xRotated, yRotated, zRotated;
+int NewWindow(char *window_name, int window_width, int window_height) {
+    // Initialize GLFW
+    if (!glfwInit()) {
+        fprintf(stderr, "Failed to initialize GLFW\n");
+        return -1;
+    }
 
-int xargc = NULL;
-char **xargv = NULL;
+    // Set OpenGL version to 3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-void setArgv(int argc, char **argv) {
-	xargc = argc;
-	xargv = argv;
-}
+    // Set OpenGL profile to the core profile
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-void _Display(void) {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glLoadIdentity();
-	glTranslatef(0.0,0.0,-4.0);
-	glRotatef(xRotated,1.0,0.0,0.0);
-	glRotatef(yRotated,0.0,1.0,0.0);
-	glRotatef(zRotated,0.0,0.0,1.0);
-	glScalef(2.0,1.0,1.0);
-	glutWireCube(1.0);
-	glFlush();			//Finish rendering
-	glutSwapBuffers();
-}
+    // Create a GLFW window
+    GLFWwindow* window = glfwCreateWindow(window_width, window_height, window_name, NULL, NULL);
+    if (!window) {
+        fprintf(stderr, "Failed to create GLFW window\n");
+        glfwTerminate();
+        return -1;
+    }
 
-void _Reshape(int x, int y) {
-	
-	// Nothing visible so return
-	if (y == 0 || x == 0) return;
-	
-	// Set a new projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+    // Make the OpenGL context of the window current
+    glfwMakeContextCurrent(window);
 
-	// angle of view  = 40deg
-	// Near clip = 0.5
-	// Far clip  = 20.0
-	gluPerspective(40.0, (GLdouble)x/(GLdouble)y, 0.5, 20.0);
-	glMatrixMode(GL_MODELVIEW);
+    // Load OpenGL function pointers with GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        fprintf(stderr, "Failed to initialize GLAD\n");
+        glfwDestroyWindow(window);
+        glfwTerminate();
+        return -1;
+    }
 
-	// Use the whole window for renderinf
-	glViewport(0,0,x,y);
+    // Loop to keep the window open and handle events
+    while (!glfwWindowShouldClose(window)) {
+        // Your rendering and logic code goes here...
 
-}
+        glfwSwapBuffers(window); // Swap the front and back buffers
+        glfwPollEvents();        // Process pending events
+    }
 
-void _Idle(void) {
-	xRotated += 2.3;
-	yRotated += 2.1;
-	zRotated += -2.4;
-	_Display();
-}
+    // Clean up and terminate GLFW
+    glfwDestroyWindow(window);
+    glfwTerminate();
 
-void newWindow(char *window_name, int window_width, int window_height) {
-	
-	// Initialize GLUT
-	glutInit(&xargc, xargv);
-
-	// Set GLUT display mode
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-
-	// set window size
-	glutInitWindowSize(window_width, window_height);
-
-	// give window a title
-	glutCreateWindow(window_name);
-
-	// Setting polygon mode
-	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-	xRotated = yRotated = zRotated = 0.0;
-
-	// clear color from screen
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-
-	// set display function
-	glutDisplayFunc(_Display);
-
-	// set reshape function
-	glutReshapeFunc(_Reshape);
-
-	// idle function
-	glutIdleFunc(_Idle);
-}
-
-void mainloop() {
-	glutMainLoop();
+    return 0;
 }
