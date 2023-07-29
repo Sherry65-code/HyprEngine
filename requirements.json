@@ -1,7 +1,0 @@
-{
-    "requirements": {
-        "fedora": {
-            "packages": ["libXrandr-devel","libXinerama-devel","libXcursor-devel","libXi-devel"]
-        }
-    }
-}
